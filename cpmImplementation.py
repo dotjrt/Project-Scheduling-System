@@ -9,6 +9,7 @@ http://en.wikipedia.org/wiki/Critical_path_method
 import sys
 import unittest
 import random
+import time
 
 VERSION = (0, 1, 1)
 __version__ = '.'.join(map(str, VERSION))
@@ -579,28 +580,31 @@ def scoreResourceAssignment(project, scheduleDataStructure):
     totalScore = 0.0
     dayScore = 0.0
     taskScore = 0.0
-    print "Scoring: "
+    #print "Scoring: "
     for day in range(0, len(scheduleDataStructure)):
-        print "Day: " + str(day + 1)
+    #    print "Day: " + str(day + 1)
         for task in project.nodes:
             if scheduleDataStructure[day][project.nodes.index(task)] != []:
-                print "Task " + str(task.name) + " - ",
+    #            print "Task " + str(task.name) + " - ",
                 for worker in scheduleDataStructure[day][project.nodes.index(task)]:
                     taskScore += worker.efficiencyRatings[task.idNo - 1]
                 if task.total_float > 0:
                     taskScore /= task.total_float
                 elif task.total_float == 0:
                     taskScore *= task.duration
-                print "Task score: " + str(taskScore)
+    #            print "Task score: " + str(taskScore)
                 dayScore += taskScore
                 taskScore = 0.0
-        print "Day score: " + str(dayScore)
+    #    print "Day score: " + str(dayScore)
         totalScore += dayScore
         dayScore = 0.0
-    print "Project score: " + str(totalScore)
+    #print "Project score: " + str(totalScore)
+    return totalScore
            
         
 def main():
+
+    t0 = time.time()
     p = Node(0, 'MyProject')
     a = p.add(Node(1, 'A', duration=4))
     b = p.add(Node(2, 'B', duration=5))
@@ -628,11 +632,31 @@ def main():
     jim.setEfficiencyRatings([3,4,5,1,1,4,2,5])
 
     # Assign resources randomly to tasks
-    scheduleDataStructure = initializeProjectScheduleDataStructure(p)
-    print "Randomly assigning resources to tasks..."
-    scheduleDataStructure = assignResourcesRandomly([steve, bob, jim], p, scheduleDataStructure)
-    printProjectScheduleDataStructure(p, scheduleDataStructure)
-    scoreResourceAssignment(p, scheduleDataStructure)
+    #scheduleDataStructure = initializeProjectScheduleDataStructure(p)
+    #print "Randomly assigning resources to tasks..."
+    #scheduleDataStructure = assignResourcesRandomly([steve, bob, jim], p, scheduleDataStructure)
+    #printProjectScheduleDataStructure(p, scheduleDataStructure)
+    #scoreResourceAssignment(p, scheduleDataStructure)
+
+    # Create a space of random resource allocations
+    print "Finding optimal schedule..."
+    allScheduleDataStructures = []
+    scores = []
+    for x in range(0, 10000):
+        allScheduleDataStructures.append(initializeProjectScheduleDataStructure(p))
+
+    for structure in allScheduleDataStructures:
+        structure = assignResourcesRandomly([steve, bob, jim], p, structure)
+        scores.append(scoreResourceAssignment(p, structure))
+
+    max_value = max(scores)
+    max_index = scores.index(max_value)
+    print "High score: " + str(max_value)
+    printProjectScheduleDataStructure(p, allScheduleDataStructures[max_index])
+
+    tf = time.time() - t0
+    print "Runtime: " + str(tf)
+
     
     
 if __name__ == '__main__':
