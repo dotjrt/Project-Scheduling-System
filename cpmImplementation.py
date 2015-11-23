@@ -10,6 +10,7 @@ import sys
 import unittest
 import random
 import time
+import csv
 
 VERSION = (0, 1, 1)
 __version__ = '.'.join(map(str, VERSION))
@@ -600,11 +601,41 @@ def scoreResourceAssignment(project, scheduleDataStructure):
         dayScore = 0.0
     #print "Project score: " + str(totalScore)
     return totalScore
-           
+
+def runHillClimber(runtime, p, resources):
+    # Use hill climber method to find a good schedule
+    t0 = time.time()
+    bestSchedule = []
+    bestSchedule = initializeProjectScheduleDataStructure(p)
+    currentHighScore = 0
+    schedulesAnalyzed = 0
+    tf = 0
+
+    print "Finding an optimal schedule..."
+    while tf < runtime:
+        tempSchedule = []
+        tempSchedule = initializeProjectScheduleDataStructure(p)
+        tempSchedule = assignResourcesRandomly(resources, p, tempSchedule)
+        schedulesAnalyzed += 1
+        tempScore = scoreResourceAssignment(p, tempSchedule)
+        
+        if tempScore > currentHighScore:
+            bestSchedule = tempSchedule
+            currentHighScore = tempScore
+            print "Optimization found -- new high score: " + "%.1f" % currentHighScore + "\t(time - " + "%.3f" % tf + ")"
+            with open('aiProjectResults.csv', 'a') as fp:
+                a = csv.writer(fp, delimiter=',')
+                data = [["%.0f" % tf]]
+                a.writerows(data)
+        tf = time.time() - t0
+
+    print "\n"
+    printProjectScheduleDataStructure(p, bestSchedule)
+    print "Runtime: " + str(tf) + " seconds"
+    print "Schedules analyzed: " + str(schedulesAnalyzed)
+    ##################################################### 
         
 def main():
-
-    t0 = time.time()
     p = Node(0, 'MyProject')
     a = p.add(Node(1, 'A', duration=4))
     b = p.add(Node(2, 'B', duration=5))
@@ -627,9 +658,9 @@ def main():
     jim = Worker("Jim")
     
     # Set efficiency ratings matrix for each resource and task
-    steve.setEfficiencyRatings([5,4,3,2,1,2,2,4])
-    bob.setEfficiencyRatings([1,4,4,5,2,4,3,2])
-    jim.setEfficiencyRatings([3,4,5,1,1,4,2,5])
+    steve.setEfficiencyRatings( [5,4,3,2,1,2,2,4])
+    bob.setEfficiencyRatings(   [1,4,4,5,2,4,3,2])
+    jim.setEfficiencyRatings(   [3,4,5,1,1,4,2,5])
 
     # Assign resources randomly to tasks
     #scheduleDataStructure = initializeProjectScheduleDataStructure(p)
@@ -638,26 +669,24 @@ def main():
     #printProjectScheduleDataStructure(p, scheduleDataStructure)
     #scoreResourceAssignment(p, scheduleDataStructure)
 
-    # Create a space of random resource allocations
-    print "Finding optimal schedule..."
-    allScheduleDataStructures = []
-    scores = []
-    for x in range(0, 10000):
-        allScheduleDataStructures.append(initializeProjectScheduleDataStructure(p))
+    # Create a large space of random resource allocations
+    #print "Finding optimal schedule..."
+    #allScheduleDataStructures = []
+    #scores = []
+    #for x in range(0, 1000):
+    #    allScheduleDataStructures.append(initializeProjectScheduleDataStructure(p))
 
-    for structure in allScheduleDataStructures:
-        structure = assignResourcesRandomly([steve, bob, jim], p, structure)
-        scores.append(scoreResourceAssignment(p, structure))
-
-    max_value = max(scores)
-    max_index = scores.index(max_value)
-    print "High score: " + str(max_value)
-    printProjectScheduleDataStructure(p, allScheduleDataStructures[max_index])
-
-    tf = time.time() - t0
-    print "Runtime: " + str(tf)
-
+    #for structure in allScheduleDataStructures:
+    #    structure = assignResourcesRandomly([steve, bob, jim], p, structure)
+    #    scores.append(scoreResourceAssignment(p, structure))
     
+    #max_value = max(scores)
+    #max_index = scores.index(max_value)
+    #print "High score: " + str(max_value)
+    #printProjectScheduleDataStructure(p, allScheduleDataStructures[max_index])
+    ####################################################
+
+    runHillClimber(180, p, [steve, bob, jim])
     
 if __name__ == '__main__':
     main()
