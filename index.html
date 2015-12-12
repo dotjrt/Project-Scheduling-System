@@ -50,6 +50,8 @@
 
 <p><img src="https://github.com/jrthom18/Project-Scheduling-System/blob/master/images/SampleTaskNetwork.PNG?raw=true" alt="Project network"></p>
 
+<p><img src="https://github.com/jrthom18/Project-Scheduling-System/blob/master/images/ResourcePool.png?raw=true" alt="Sample resource pool"></p>
+
 <p>The system first uses the input task network to develop a Gantt chart using the <a href="https://en.wikipedia.org/wiki/Critical_path_method">critical path method</a>. For each task, the early start date and late finish date are computed. These dates correspond to the earliest a task may begin given the completion of prerequisite tasks and the latest that a task can possibly be completed without preventing the rest of the project from being completed in the minimum possible duration. Some tasks can be delayed for a certain amount of time without holding up the rest of the project while others can not. This amount of delay is called "float" and is represented with the '~' symbol in the Gantt chart output below. Tasks with zero float are considered critical tasks since they must be started and completed by specific days or the entire project completion will be delayed. </p>
 
 <p><img src="https://github.com/jrthom18/Project-Scheduling-System/blob/master/images/SampleGanttChart.PNG?raw=true" alt="Project network"></p>
@@ -57,7 +59,7 @@
 <p>Once a Gantt chart has been generated, the system can search for an optimized resource allocation to each task. To do this, the system implements the hill climber method. Each new candidate schedule is scored based on the efficiency ratings of the resources assigned to each task. The score function is designed to favor schedules that assign higher-rated resources to the longer critical tasks. A portion of the score function is shown here:</p>
 
 <pre><code>`for day in range(0, len(scheduleDataStructure)):
-# iterate through each day of the project Gantt chart
+ # iterate through each day of the project Gantt chart
     for task in project.nodes:
         if scheduleDataStructure[day][project.nodes.index(task)] != []:
             # for each task, assign a score based on the resources assigned
