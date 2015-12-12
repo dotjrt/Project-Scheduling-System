@@ -623,10 +623,10 @@ def runHillClimber(runtime, p, resources):
             bestSchedule = tempSchedule
             currentHighScore = tempScore
             print "Optimization found -- new high score: " + "%.1f" % currentHighScore + "\t(time - " + "%.3f" % tf + ")"
-            with open('aiProjectResults.csv', 'a') as fp:
-                a = csv.writer(fp, delimiter=',')
-                data = [["%.0f" % tf]]
-                a.writerows(data)
+            #with open('aiProjectResults.csv', 'a') as fp:
+            #    a = csv.writer(fp, delimiter=',')
+            #    data = [["%.0f" % tf]]
+            #    a.writerows(data)
         tf = time.time() - t0
 
     print "\n"
@@ -670,7 +670,7 @@ def main():
     #scoreResourceAssignment(p, scheduleDataStructure)
 
     # Create a large space of random resource allocations
-    #print "Finding optimal schedule..."
+    #print "Finding an optimal schedule..."
     #allScheduleDataStructures = []
     #scores = []
     #for x in range(0, 1000):
@@ -686,7 +686,7 @@ def main():
     #printProjectScheduleDataStructure(p, allScheduleDataStructures[max_index])
     ####################################################
 
-    runHillClimber(180, p, [steve, bob, jim])
+    runHillClimber(120, p, [steve, bob, jim])
     
 if __name__ == '__main__':
     main()
