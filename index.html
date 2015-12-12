@@ -1,37 +1,34 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
   <head>
-    <meta charset='utf-8'>
+    <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="stylesheets/github-dark.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+    <title>Optimizing Resource Allocation for Project Managers by jrthom18</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/github-light.css">
+    <meta name="viewport" content="width=device-width">
     <!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
-    <title>Optimizing Resource Allocation for Project Managers by jrthom18</title>
   </head>
-
   <body>
-    <div id="container">
-      <div class="inner">
+    <div class="wrapper">
+      <header>
+        <h1>Optimizing Resource Allocation for Project Managers</h1>
+        <p>Better scheduling of resources to time-sensitive tasks within a project network</p>
 
-        <header>
-          <h1>Optimizing Resource Allocation for Project Managers</h1>
-          <h2>Better scheduling of resources to time-sensitive tasks within a project network</h2>
-        </header>
+        <p class="view"><a href="https://github.com/jrthom18/Project-Scheduling-System">View the Project on GitHub <small>jrthom18/Project-Scheduling-System</small></a></p>
 
-        <section id="downloads" class="clearfix">
-          <a href="https://github.com/jrthom18/Project-Scheduling-System/zipball/master" id="download-zip" class="button"><span>Download .zip</span></a>
-          <a href="https://github.com/jrthom18/Project-Scheduling-System/tarball/master" id="download-tar-gz" class="button"><span>Download .tar.gz</span></a>
-          <a href="https://github.com/jrthom18/Project-Scheduling-System" id="view-on-github" class="button"><span>View on GitHub</span></a>
-        </section>
 
-        <hr>
-
-        <section id="main_content">
-          <h2>
+        <ul>
+          <li><a href="https://github.com/jrthom18/Project-Scheduling-System/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/jrthom18/Project-Scheduling-System/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/jrthom18/Project-Scheduling-System">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h2>
 <a id="what" class="anchor" href="#what" aria-hidden="true"><span class="octicon octicon-link"></span></a>What</h2>
 
 <p>My project is a system that will optimize resource allocation to tasks within a task network. The system is given two inputs: A task network where some tasks may be dependent on the completion of others in order to be started and a resource pool where each resource's efficiency for each task is rated on a scale of 1-5, 5 being the best. </p>
@@ -50,17 +47,39 @@
 
 <p><img src="https://github.com/jrthom18/Project-Scheduling-System/blob/master/images/SampleTaskNetwork.PNG?raw=true" alt="Project network"></p>
 
+<p>The system first uses the input task network to develop a Gantt chart using the <a href="https://en.wikipedia.org/wiki/Critical_path_method">critical path method</a>. For each task, the early start date and late finish date are computed. These dates correspond to the earliest a task may begin given the completion of prerequisite tasks and the latest that a task can possibly be completed without preventing the rest of the project from being completed in the minimum possible duration. Some tasks can be delayed for a certain amount of time without holding up the rest of the project while others can not. This amount of delay is called "float" and is represented with the '~' symbol in the Gantt chart output below. Tasks with zero float are considered critical tasks since they must be started and completed by specific days or the entire project completion will be delayed. </p>
+
+<p><img src="https://github.com/jrthom18/Project-Scheduling-System/blob/master/images/SampleGanttChart.PNG?raw=true" alt="Project network"></p>
+
+<p>Once a Gantt chart has been generated, the system can search for an optimized resource allocation to each task. To do this, the system implements the hill climber method. Each new candidate schedule is scored based on the efficiency ratings of the resources assigned to each task. The score function is designed to favor schedules that assign higher-rated resources to the longer critical tasks. A portion of the score function is shown here:</p>
+
+<p><code>for day in range(0, len(scheduleDataStructure)):
+    # iterate through each day of the project Gantt chart
+        for task in project.nodes:
+            if scheduleDataStructure[day][project.nodes.index(task)] != []:
+                # for each task, assign a score based on the resources assigned
+                for worker in scheduleDataStructure[day][project.nodes.index(task)]:
+                    taskScore += worker.efficiencyRatings[task.idNo - 1]
+                if task.total_float &gt; 0:
+                    taskScore /= task.total_float
+                elif task.total_float == 0:
+                    taskScore *= task.duration
+                dayScore += taskScore
+                taskScore = 0.0         # reset the task score before loop begins again
+        # add sum to total score
+        totalScore += dayScore
+        # reset the day score before advancing loop to next day in schedule
+        dayScore = 0.0</code>   </p>
+
 <h2>
 <a id="results" class="anchor" href="#results" aria-hidden="true"><span class="octicon octicon-link"></span></a>Results</h2>
-        </section>
-
-        <footer>
-          Optimizing Resource Allocation for Project Managers is maintained by <a href="https://github.com/jrthom18">jrthom18</a><br>
-          This page was generated by <a href="https://pages.github.com">GitHub Pages</a>. Tactile theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.
-        </footer>
-
-        
-      </div>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/jrthom18">jrthom18</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
     </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
   </body>
 </html>
