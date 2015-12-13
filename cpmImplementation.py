@@ -670,23 +670,27 @@ def main():
     #scoreResourceAssignment(p, scheduleDataStructure)
 
     # Create a large space of random resource allocations
-    #print "Finding an optimal schedule..."
+    #print "Finding the optimal schedule..."
     #allScheduleDataStructures = []
     #scores = []
-    #for x in range(0, 1000):
+    #for x in range(0, 100000):
     #    allScheduleDataStructures.append(initializeProjectScheduleDataStructure(p))
 
+    #uniqueCounter = 0
     #for structure in allScheduleDataStructures:
     #    structure = assignResourcesRandomly([steve, bob, jim], p, structure)
-    #    scores.append(scoreResourceAssignment(p, structure))
+    #    if scoreResourceAssignment(p, structure) not in scores:      
+    #        scores.append(scoreResourceAssignment(p, structure))
+    #        uniqueCounter += 1
     
+    #print "Unique schedules:" + str(uniqueCounter)
     #max_value = max(scores)
     #max_index = scores.index(max_value)
     #print "High score: " + str(max_value)
     #printProjectScheduleDataStructure(p, allScheduleDataStructures[max_index])
     ####################################################
 
-    runHillClimber(120, p, [steve, bob, jim])
+    runHillClimber(10, p, [steve, bob, jim])
     
 if __name__ == '__main__':
     main()
