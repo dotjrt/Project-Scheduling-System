@@ -58,7 +58,7 @@
 
 <p>Once a Gantt chart has been generated, the system can search for an optimized resource allocation to each task. To do this, the system implements the hill climber method. Each new candidate schedule is scored based on the efficiency ratings of the resources assigned to each task. The score function is designed to favor schedules that assign higher-rated resources to the longer critical tasks. A portion of the score function is shown here:</p>
 
-<pre><code>`for day in range(0, len(scheduleDataStructure)):
+<pre><code> for day in range(0, len(scheduleDataStructure)):
  # iterate through each day of the project Gantt chart
     for task in project.nodes:
         if scheduleDataStructure[day][project.nodes.index(task)] != []:
@@ -74,11 +74,13 @@
     # add sum to total score
     totalScore += dayScore
     # reset the day score before advancing loop to next day in schedule
-    dayScore = 0.0`   
+    dayScore = 0.0   
 </code></pre>
 
 <h2>
 <a id="results" class="anchor" href="#results" aria-hidden="true"><span class="octicon octicon-link"></span></a>Results</h2>
+
+<p>The hill climber method has a number of benefits. Most notably, it is relatively simple to implement and will often produce a good result even when the amount of time available to perform the optimization is limited. Although it may not yield the 'best' result that a more complex and costly algorithm would, it does not require a long run time that would be necessary to find an optimal schedule for a large task network. </p>
         </section>
 
         <footer>
