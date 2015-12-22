@@ -476,6 +476,23 @@ class Test(unittest.TestCase):
         self.assertEqual(p.ls, 0)
         self.assertEqual(p.lf, 14)
 
+class ProjectAssignment:
+    def __init__(self, name):
+        self.name = name
+        self.workers = []
+        
+    def setWorkers(self, workers):
+        self.workers = workers
+
+class Worker:
+    def __init__(self, name):
+        self.name = name
+        self.efficiencyRatings = []
+        self.isAvailable = True
+
+    def setEfficiencyRatings(self, ratings):
+        self.efficiencyRatings = ratings
+
 def printGantt(p):
     daysOfTheWeek = ["M", "T", "W", "R", "F"]
     #sort project nodes by early start date 
@@ -505,23 +522,6 @@ def printProjectOverview(p):
     print "Critical path: " + str(p.get_critical_path())
     print "Minimum duration: " + str(p.duration)
     print "\n"
-
-class ProjectAssignment:
-    def __init__(self, name):
-        self.name = name
-        self.workers = []
-        
-    def setWorkers(self, workers):
-        self.workers = workers
-
-class Worker:
-    def __init__(self, name):
-        self.name = name
-        self.efficiencyRatings = []
-        self.isAvailable = True
-
-    def setEfficiencyRatings(self, ratings):
-        self.efficiencyRatings = ratings
 
 def getActiveTasks(taskList, currentDay):
     activeTasks = []
@@ -660,7 +660,7 @@ def main():
     # Set efficiency ratings matrix for each resource and task
     alice.setEfficiencyRatings( [5,4,3,2,1,2,2,4])
     bob.setEfficiencyRatings(   [1,4,4,5,2,4,3,2])
-    carol.setEfficiencyRatings(   [3,4,5,1,1,4,2,5])
+    carol.setEfficiencyRatings( [3,4,5,1,1,4,2,5])
 
     runHillClimber(10, p, [alice, bob, carol])
     
